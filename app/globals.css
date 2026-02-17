@@ -1,7 +1,9 @@
 @import "tailwindcss";
 /* @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap'); */
 
+/* ===== THEME VARIABLES ===== */
 :root {
+  /* Dark Mode (Default) */
   --background: #0a0a12;
   --foreground: #ededed;
   --primary: #c9a84c;
@@ -23,8 +25,8 @@
   --streak-flame: #ff6b35;
 }
 
-/* ===== LIGHT MODE ===== */
-body.light-mode {
+/* Light Mode Override */
+:root[data-theme="light"] {
   --background: #faf7f2;
   --foreground: #1a1a2e;
   --primary: #b8860b;
@@ -46,7 +48,8 @@ body.light-mode {
   --streak-flame: #e55039;
 }
 
-body.light-mode .bg-islamic-pattern {
+/* Light Mode Element Styles */
+:root[data-theme="light"] .bg-islamic-pattern {
   background:
     radial-gradient(ellipse at 20% 50%, rgba(184, 134, 11, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 20%, rgba(108, 92, 231, 0.04) 0%, transparent 50%),
@@ -54,104 +57,75 @@ body.light-mode .bg-islamic-pattern {
     linear-gradient(180deg, #faf7f2 0%, #f5edd8 30%, #f0e6d3 60%, #faf7f2 100%);
 }
 
-body.light-mode .star { display: none; }
-body.light-mode .moon { box-shadow: 0 0 30px rgba(184,134,11,0.2), 0 0 60px rgba(184,134,11,0.1); }
-body.light-mode .retro-grid { opacity: 0.03; }
-body.light-mode .mosque-silhouette { opacity: 0.06; }
+:root[data-theme="light"] .star { display: none; }
+:root[data-theme="light"] .moon { box-shadow: 0 0 30px rgba(184,134,11,0.2), 0 0 60px rgba(184,134,11,0.1); }
+:root[data-theme="light"] .retro-grid { opacity: 0.03; }
+:root[data-theme="light"] .mosque-silhouette { opacity: 0.06; }
 
-body.light-mode .glass-card {
+:root[data-theme="light"] .glass-card {
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow: 0 2px 20px rgba(0,0,0,0.04);
 }
 
-body.light-mode .neon-text { 
-  color: #b8860b;
-  text-shadow: none;
-}
-body.light-mode .neon-text-teal { color: #00a389; text-shadow: none; }
-body.light-mode .neon-text-purple { color: #8e44ad; text-shadow: none; }
+:root[data-theme="light"] .neon-text { color: #b8860b; text-shadow: none; }
+:root[data-theme="light"] .neon-text-teal { color: #00a389; text-shadow: none; }
+:root[data-theme="light"] .neon-text-purple { color: #8e44ad; text-shadow: none; }
 
-body.light-mode .top-header {
+:root[data-theme="light"] .top-header {
   background: rgba(255, 255, 255, 0.85);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-body.light-mode .bottom-nav {
+:root[data-theme="light"] .bottom-nav {
   background: rgba(255, 255, 255, 0.92);
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-body.light-mode .bottom-nav button { color: rgba(0, 0, 0, 0.4); }
-body.light-mode .bottom-nav button.active { color: #b8860b; }
+:root[data-theme="light"] .bottom-nav button { color: rgba(0, 0, 0, 0.4); }
+:root[data-theme="light"] .bottom-nav button.active { color: #b8860b; }
 
-body.light-mode .lang-btn {
+:root[data-theme="light"] .lang-btn {
   color: rgba(0, 0, 0, 0.5);
   border-color: rgba(0, 0, 0, 0.1);
 }
-body.light-mode .lang-btn.active {
+:root[data-theme="light"] .lang-btn.active {
   background: #b8860b;
   color: #fff;
   border-color: #b8860b;
 }
 
-body.light-mode .btn-glass {
+:root[data-theme="light"] .btn-glass {
   background: rgba(184, 134, 11, 0.06);
   border: 1px solid rgba(184, 134, 11, 0.15);
   color: #b8860b;
 }
 
-body.light-mode .btn-primary {
+:root[data-theme="light"] .btn-primary {
   background: linear-gradient(135deg, #b8860b, #cd950c);
   color: #fff;
 }
 
-body.light-mode .email-input {
+:root[data-theme="light"] .email-input {
   background: rgba(0, 0, 0, 0.03);
   border: 1px solid rgba(0, 0, 0, 0.1);
   color: #1a1a2e;
 }
 
-body.light-mode .quote-text { color: rgba(0, 0, 0, 0.65); }
-body.light-mode .tasbih-btn { background: rgba(184, 134, 11, 0.06); border-color: rgba(184, 134, 11, 0.15); }
+:root[data-theme="light"] .quote-text { color: rgba(0, 0, 0, 0.65); }
+:root[data-theme="light"] .tasbih-btn { background: rgba(184, 134, 11, 0.06); border-color: rgba(184, 134, 11, 0.15); }
 
-/* City selector & Theme toggle */
-.city-select {
-  appearance: none;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: inherit;
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-family: 'Outfit', sans-serif;
-  cursor: pointer;
-  outline: none;
-  transition: all 0.3s ease;
-}
-.city-select:focus { border-color: var(--primary); }
-body.light-mode .city-select {
+:root[data-theme="light"] .city-select {
   background: rgba(0,0,0,0.03);
   border: 1px solid rgba(0,0,0,0.1);
   color: #1a1a2e;
 }
 
-.theme-toggle {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.06);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem;
-  transition: all 0.3s ease;
-}
-.theme-toggle:hover { background: rgba(255,255,255,0.12); transform: scale(1.1); }
-body.light-mode .theme-toggle {
+:root[data-theme="light"] .theme-toggle {
   border-color: rgba(0,0,0,0.1);
   background: rgba(0,0,0,0.04);
 }
-body.light-mode .theme-toggle:hover { background: rgba(0,0,0,0.08); }
+:root[data-theme="light"] .theme-toggle:hover { background: rgba(0,0,0,0.08); }
 
 @theme inline {
   --color-background: var(--background);

@@ -1,5 +1,21 @@
 export type Lang = 'az' | 'en' | 'ru';
 
+// Azerbaijan cities with minute offsets from Baku
+export type CityKey = 'baku' | 'sumgait' | 'ganja' | 'lankaran' | 'sheki' | 'mingachevir' | 'shirvan' | 'nakhchivan' | 'quba' | 'shamakhi';
+
+export const CITIES: Record<CityKey, { name: Record<Lang, string>; offset: number }> = {
+    baku: { name: { az: 'Bakı', en: 'Baku', ru: 'Баку' }, offset: 0 },
+    sumgait: { name: { az: 'Sumqayıt', en: 'Sumgait', ru: 'Сумгаит' }, offset: 1 },
+    ganja: { name: { az: 'Gəncə', en: 'Ganja', ru: 'Гянджа' }, offset: 14 },
+    lankaran: { name: { az: 'Lənkəran', en: 'Lankaran', ru: 'Ленкорань' }, offset: 4 },
+    sheki: { name: { az: 'Şəki', en: 'Sheki', ru: 'Шеки' }, offset: 11 },
+    mingachevir: { name: { az: 'Mingəçevir', en: 'Mingachevir', ru: 'Мингечевир' }, offset: 11 },
+    shirvan: { name: { az: 'Şirvan', en: 'Shirvan', ru: 'Ширван' }, offset: 4 },
+    nakhchivan: { name: { az: 'Naxçıvan', en: 'Nakhchivan', ru: 'Нахчыван' }, offset: 18 },
+    quba: { name: { az: 'Quba', en: 'Quba', ru: 'Куба' }, offset: 5 },
+    shamakhi: { name: { az: 'Şamaxı', en: 'Shamakhi', ru: 'Шамахы' }, offset: 5 },
+};
+
 export const translations: Record<Lang, Record<string, string>> = {
     az: {
         // Nav
@@ -12,6 +28,16 @@ export const translations: Record<Lang, Record<string, string>> = {
         // Header
         appTitle: 'Ramazan',
         appSubtitle: 'Mübarək',
+        settings: 'Tənzimləmələr',
+
+        // Settings
+        settingsTitle: 'Tənzimləmələr',
+        themeLabel: 'Görünüş',
+        locationLabel: 'Bölgə',
+        languageLabel: 'Dil',
+        back: 'Geri',
+        darkMode: 'Qaranlıq',
+        lightMode: 'İşıqlı',
 
         // Countdown
         countdownTitle: 'Ramazana Geri Sayım',
@@ -89,7 +115,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         // Landing
         heroTitle: 'Ramazan Mübarək',
-        heroSubtitle: 'Ruhani yolçuluğunuzu izləyin, dualarınızı sayın, orucunuzu planlaşdırın',
+        heroSubtitle: 'dualarınızı sayın, orucunuzu planlaşdırın',
         exploreBtn: 'Kəşf Edin',
         features: 'Xüsusiyyətlər',
         featureCountdown: 'Geri Sayım',
@@ -118,6 +144,16 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         appTitle: 'Ramadan',
         appSubtitle: 'Mubarak',
+        settings: 'Settings',
+
+        // Settings
+        settingsTitle: 'Settings',
+        themeLabel: 'Appearance',
+        locationLabel: 'Location',
+        languageLabel: 'Language',
+        back: 'Back',
+        darkMode: 'Dark',
+        lightMode: 'Light',
 
         countdownTitle: 'Countdown to Ramadan',
         countdownDays: 'Days',
@@ -213,6 +249,16 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         appTitle: 'Рамадан',
         appSubtitle: 'Мубарак',
+        settings: 'Настройки',
+
+        // Settings
+        settingsTitle: 'Настройки',
+        themeLabel: 'Оформление',
+        locationLabel: 'Регион',
+        languageLabel: 'Язык',
+        back: 'Назад',
+        darkMode: 'Темный',
+        lightMode: 'Светлый',
 
         countdownTitle: 'Обратный отсчёт до Рамадана',
         countdownDays: 'Дни',

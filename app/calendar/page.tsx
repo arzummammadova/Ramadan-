@@ -4,38 +4,38 @@ import { useState, useEffect } from 'react';
 import { translations, Lang } from '../translations';
 import Link from 'next/link';
 
-// Exact Ramadan 2026 prayer times for Baku (from Aladhan API, Diyanet method)
+// Exact Ramadan 2026 prayer times for Baku (Sunni Calculation: 06:12->05:25, 18:25->18:57)
 const RAMADAN_CALENDAR = [
-    { day: 1, date: '18 Feb', greg: '18-02-2026', imsak: '05:49', fajr: '05:59', sunrise: '07:23', dhuhr: '13:00', asr: '15:56', maghrib: '18:26', isha: '19:45' },
-    { day: 2, date: '19 Feb', greg: '19-02-2026', imsak: '05:48', fajr: '05:58', sunrise: '07:22', dhuhr: '12:59', asr: '15:57', maghrib: '18:27', isha: '19:46' },
-    { day: 3, date: '20 Feb', greg: '20-02-2026', imsak: '05:47', fajr: '05:57', sunrise: '07:21', dhuhr: '12:59', asr: '15:58', maghrib: '18:29', isha: '19:47' },
-    { day: 4, date: '21 Feb', greg: '21-02-2026', imsak: '05:46', fajr: '05:56', sunrise: '07:19', dhuhr: '12:59', asr: '15:58', maghrib: '18:30', isha: '19:48' },
-    { day: 5, date: '22 Feb', greg: '22-02-2026', imsak: '05:44', fajr: '05:54', sunrise: '07:18', dhuhr: '12:59', asr: '15:59', maghrib: '18:31', isha: '19:49' },
-    { day: 6, date: '23 Feb', greg: '23-02-2026', imsak: '05:43', fajr: '05:53', sunrise: '07:17', dhuhr: '12:59', asr: '16:00', maghrib: '18:32', isha: '19:51' },
-    { day: 7, date: '24 Feb', greg: '24-02-2026', imsak: '05:42', fajr: '05:52', sunrise: '07:15', dhuhr: '12:59', asr: '16:01', maghrib: '18:33', isha: '19:52' },
-    { day: 8, date: '25 Feb', greg: '25-02-2026', imsak: '05:40', fajr: '05:50', sunrise: '07:14', dhuhr: '12:59', asr: '16:02', maghrib: '18:34', isha: '19:53' },
-    { day: 9, date: '26 Feb', greg: '26-02-2026', imsak: '05:39', fajr: '05:49', sunrise: '07:12', dhuhr: '12:58', asr: '16:02', maghrib: '18:35', isha: '19:54' },
-    { day: 10, date: '27 Feb', greg: '27-02-2026', imsak: '05:37', fajr: '05:47', sunrise: '07:11', dhuhr: '12:58', asr: '16:03', maghrib: '18:37', isha: '19:55' },
-    { day: 11, date: '28 Feb', greg: '28-02-2026', imsak: '05:36', fajr: '05:46', sunrise: '07:09', dhuhr: '12:58', asr: '16:04', maghrib: '18:38', isha: '19:56' },
-    { day: 12, date: '1 Mar', greg: '01-03-2026', imsak: '05:34', fajr: '05:44', sunrise: '07:08', dhuhr: '12:58', asr: '16:05', maghrib: '18:39', isha: '19:57' },
-    { day: 13, date: '2 Mar', greg: '02-03-2026', imsak: '05:33', fajr: '05:43', sunrise: '07:06', dhuhr: '12:58', asr: '16:05', maghrib: '18:40', isha: '19:58' },
-    { day: 14, date: '3 Mar', greg: '03-03-2026', imsak: '05:31', fajr: '05:41', sunrise: '07:05', dhuhr: '12:58', asr: '16:06', maghrib: '18:41', isha: '19:59' },
-    { day: 15, date: '4 Mar', greg: '04-03-2026', imsak: '05:30', fajr: '05:40', sunrise: '07:03', dhuhr: '12:57', asr: '16:07', maghrib: '18:42', isha: '20:00' },
-    { day: 16, date: '5 Mar', greg: '05-03-2026', imsak: '05:28', fajr: '05:38', sunrise: '07:02', dhuhr: '12:57', asr: '16:08', maghrib: '18:43', isha: '20:01' },
-    { day: 17, date: '6 Mar', greg: '06-03-2026', imsak: '05:27', fajr: '05:37', sunrise: '07:00', dhuhr: '12:57', asr: '16:08', maghrib: '18:44', isha: '20:03' },
-    { day: 18, date: '7 Mar', greg: '07-03-2026', imsak: '05:25', fajr: '05:35', sunrise: '06:58', dhuhr: '12:57', asr: '16:09', maghrib: '18:46', isha: '20:04' },
-    { day: 19, date: '8 Mar', greg: '08-03-2026', imsak: '05:24', fajr: '05:34', sunrise: '06:57', dhuhr: '12:56', asr: '16:10', maghrib: '18:47', isha: '20:05' },
-    { day: 20, date: '9 Mar', greg: '09-03-2026', imsak: '05:22', fajr: '05:32', sunrise: '06:55', dhuhr: '12:56', asr: '16:10', maghrib: '18:48', isha: '20:06' },
-    { day: 21, date: '10 Mar', greg: '10-03-2026', imsak: '05:20', fajr: '05:30', sunrise: '06:54', dhuhr: '12:56', asr: '16:11', maghrib: '18:49', isha: '20:07' },
-    { day: 22, date: '11 Mar', greg: '11-03-2026', imsak: '05:19', fajr: '05:29', sunrise: '06:52', dhuhr: '12:56', asr: '16:12', maghrib: '18:50', isha: '20:08' },
-    { day: 23, date: '12 Mar', greg: '12-03-2026', imsak: '05:17', fajr: '05:27', sunrise: '06:51', dhuhr: '12:55', asr: '16:12', maghrib: '18:51', isha: '20:09' },
-    { day: 24, date: '13 Mar', greg: '13-03-2026', imsak: '05:15', fajr: '05:25', sunrise: '06:49', dhuhr: '12:55', asr: '16:13', maghrib: '18:52', isha: '20:10' },
-    { day: 25, date: '14 Mar', greg: '14-03-2026', imsak: '05:14', fajr: '05:24', sunrise: '06:47', dhuhr: '12:55', asr: '16:13', maghrib: '18:53', isha: '20:11' },
-    { day: 26, date: '15 Mar', greg: '15-03-2026', imsak: '05:12', fajr: '05:22', sunrise: '06:46', dhuhr: '12:55', asr: '16:14', maghrib: '18:54', isha: '20:13' },
-    { day: 27, date: '16 Mar', greg: '16-03-2026', imsak: '05:10', fajr: '05:20', sunrise: '06:44', dhuhr: '12:54', asr: '16:15', maghrib: '18:55', isha: '20:14' },
-    { day: 28, date: '17 Mar', greg: '17-03-2026', imsak: '05:09', fajr: '05:19', sunrise: '06:42', dhuhr: '12:54', asr: '16:15', maghrib: '18:56', isha: '20:15' },
-    { day: 29, date: '18 Mar', greg: '18-03-2026', imsak: '05:07', fajr: '05:17', sunrise: '06:41', dhuhr: '12:54', asr: '16:16', maghrib: '18:57', isha: '20:16' },
-    { day: 30, date: '19 Mar', greg: '19-03-2026', imsak: '05:05', fajr: '05:15', sunrise: '06:39', dhuhr: '12:53', asr: '16:16', maghrib: '18:58', isha: '20:17' },
+    { day: 1, date: '18 Feb', greg: '18-02-2026', imsak: '06:02', fajr: '06:12', sunrise: '07:36', dhuhr: '13:00', asr: '16:00', maghrib: '18:25', isha: '19:44' },
+    { day: 2, date: '19 Feb', greg: '19-02-2026', imsak: '06:00', fajr: '06:10', sunrise: '07:34', dhuhr: '13:00', asr: '16:01', maghrib: '18:26', isha: '19:45' },
+    { day: 3, date: '20 Feb', greg: '20-02-2026', imsak: '05:59', fajr: '06:09', sunrise: '07:33', dhuhr: '13:00', asr: '16:01', maghrib: '18:27', isha: '19:46' },
+    { day: 4, date: '21 Feb', greg: '21-02-2026', imsak: '05:57', fajr: '06:07', sunrise: '07:31', dhuhr: '13:00', asr: '16:02', maghrib: '18:28', isha: '19:47' },
+    { day: 5, date: '22 Feb', greg: '22-02-2026', imsak: '05:55', fajr: '06:05', sunrise: '07:30', dhuhr: '13:00', asr: '16:02', maghrib: '18:29', isha: '19:48' },
+    { day: 6, date: '23 Feb', greg: '23-02-2026', imsak: '05:54', fajr: '06:04', sunrise: '07:28', dhuhr: '13:00', asr: '16:03', maghrib: '18:30', isha: '19:50' },
+    { day: 7, date: '24 Feb', greg: '24-02-2026', imsak: '05:52', fajr: '06:02', sunrise: '07:26', dhuhr: '13:00', asr: '16:04', maghrib: '18:31', isha: '19:51' },
+    { day: 8, date: '25 Feb', greg: '25-02-2026', imsak: '05:50', fajr: '06:00', sunrise: '07:25', dhuhr: '12:59', asr: '16:04', maghrib: '18:33', isha: '19:52' },
+    { day: 9, date: '26 Feb', greg: '26-02-2026', imsak: '05:49', fajr: '05:59', sunrise: '07:23', dhuhr: '12:59', asr: '16:05', maghrib: '18:34', isha: '19:53' },
+    { day: 10, date: '27 Feb', greg: '27-02-2026', imsak: '05:47', fajr: '05:57', sunrise: '07:21', dhuhr: '12:59', asr: '16:05', maghrib: '18:35', isha: '19:54' },
+    { day: 11, date: '28 Feb', greg: '28-02-2026', imsak: '05:45', fajr: '05:55', sunrise: '07:20', dhuhr: '12:59', asr: '16:06', maghrib: '18:36', isha: '19:55' },
+    { day: 12, date: '1 Mar', greg: '01-03-2026', imsak: '05:44', fajr: '05:54', sunrise: '07:18', dhuhr: '12:59', asr: '16:06', maghrib: '18:37', isha: '19:56' },
+    { day: 13, date: '2 Mar', greg: '02-03-2026', imsak: '05:42', fajr: '05:52', sunrise: '07:16', dhuhr: '12:59', asr: '16:07', maghrib: '18:38', isha: '19:58' },
+    { day: 14, date: '3 Mar', greg: '03-03-2026', imsak: '05:40', fajr: '05:50', sunrise: '07:15', dhuhr: '12:58', asr: '16:08', maghrib: '18:39', isha: '19:59' },
+    { day: 15, date: '4 Mar', greg: '04-03-2026', imsak: '05:39', fajr: '05:49', sunrise: '07:13', dhuhr: '12:58', asr: '16:08', maghrib: '18:40', isha: '20:00' },
+    { day: 16, date: '5 Mar', greg: '05-03-2026', imsak: '05:37', fajr: '05:47', sunrise: '07:11', dhuhr: '12:58', asr: '16:09', maghrib: '18:41', isha: '20:01' },
+    { day: 17, date: '6 Mar', greg: '06-03-2026', imsak: '05:35', fajr: '05:45', sunrise: '07:10', dhuhr: '12:58', asr: '16:09', maghrib: '18:42', isha: '20:02' },
+    { day: 18, date: '7 Mar', greg: '07-03-2026', imsak: '05:34', fajr: '05:44', sunrise: '07:08', dhuhr: '12:57', asr: '16:10', maghrib: '18:43', isha: '20:03' },
+    { day: 19, date: '8 Mar', greg: '08-03-2026', imsak: '05:32', fajr: '05:42', sunrise: '07:06', dhuhr: '12:57', asr: '16:10', maghrib: '18:44', isha: '20:05' },
+    { day: 20, date: '9 Mar', greg: '09-03-2026', imsak: '05:30', fajr: '05:40', sunrise: '07:05', dhuhr: '12:57', asr: '16:11', maghrib: '18:45', isha: '20:06' },
+    { day: 21, date: '10 Mar', greg: '10-03-2026', imsak: '05:29', fajr: '05:39', sunrise: '07:03', dhuhr: '12:57', asr: '16:11', maghrib: '18:46', isha: '20:07' },
+    { day: 22, date: '11 Mar', greg: '11-03-2026', imsak: '05:27', fajr: '05:37', sunrise: '07:01', dhuhr: '12:56', asr: '16:12', maghrib: '18:47', isha: '20:08' },
+    { day: 23, date: '12 Mar', greg: '12-03-2026', imsak: '05:25', fajr: '05:35', sunrise: '07:00', dhuhr: '12:56', asr: '16:12', maghrib: '18:49', isha: '20:09' },
+    { day: 24, date: '13 Mar', greg: '13-03-2026', imsak: '05:24', fajr: '05:34', sunrise: '06:58', dhuhr: '12:56', asr: '16:13', maghrib: '18:50', isha: '20:10' },
+    { day: 25, date: '14 Mar', greg: '14-03-2026', imsak: '05:22', fajr: '05:32', sunrise: '06:56', dhuhr: '12:56', asr: '16:13', maghrib: '18:51', isha: '20:11' },
+    { day: 26, date: '15 Mar', greg: '15-03-2026', imsak: '05:20', fajr: '05:30', sunrise: '06:55', dhuhr: '12:55', asr: '16:14', maghrib: '18:52', isha: '20:13' },
+    { day: 27, date: '16 Mar', greg: '16-03-2026', imsak: '05:19', fajr: '05:29', sunrise: '06:53', dhuhr: '12:55', asr: '16:14', maghrib: '18:53', isha: '20:14' },
+    { day: 28, date: '17 Mar', greg: '17-03-2026', imsak: '05:17', fajr: '05:27', sunrise: '06:52', dhuhr: '12:55', asr: '16:15', maghrib: '18:54', isha: '20:15' },
+    { day: 29, date: '18 Mar', greg: '18-03-2026', imsak: '05:16', fajr: '05:26', sunrise: '06:50', dhuhr: '12:54', asr: '16:15', maghrib: '18:55', isha: '20:16' },
+    { day: 30, date: '19 Mar', greg: '19-03-2026', imsak: '05:15', fajr: '05:25', sunrise: '06:49', dhuhr: '12:54', asr: '16:16', maghrib: '18:57', isha: '20:17' },
 ];
 
 // Azerbaijan cities with minute offsets from Baku
@@ -75,7 +75,7 @@ export default function CalendarPage() {
                 const data = JSON.parse(saved);
                 if (data.lang) setLang(data.lang);
                 if (data.city) setCity(data.city);
-                if (data.theme === 'light') document.body.classList.add('light-mode');
+                if (data.theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
             }
         } catch { /* ignore */ }
     }, []);
