@@ -2,44 +2,46 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { translations, dailyQuotes, Lang } from './translations';
+import Link from 'next/link';
 
 // ==================== CONSTANTS ====================
-const RAMADAN_START = new Date('2026-02-28T00:00:00');
-const RAMADAN_END = new Date('2026-03-30T00:00:00');
+// Ramadan 2026: Feb 18 - Mar 19 (confirmed via Aladhan API, Hijri 1-30 Ramadan 1447)
+const RAMADAN_START = new Date('2026-02-18T00:00:00+04:00');
+const RAMADAN_END = new Date('2026-03-20T00:00:00+04:00');
 const TOTAL_DAYS = 30;
 
-// Baku prayer times (approximate for Ramadan 2026)
+// Baku prayer times — exact from Aladhan API (Diyanet method) for Ramadan 2026
 const PRAYER_TIMES_DATA = [
-  { fajr: '05:48', sunrise: '07:10', dhuhr: '12:38', asr: '15:52', maghrib: '18:06', isha: '19:28' },
-  { fajr: '05:46', sunrise: '07:08', dhuhr: '12:38', asr: '15:53', maghrib: '18:08', isha: '19:30' },
-  { fajr: '05:44', sunrise: '07:06', dhuhr: '12:38', asr: '15:54', maghrib: '18:09', isha: '19:31' },
-  { fajr: '05:42', sunrise: '07:04', dhuhr: '12:38', asr: '15:55', maghrib: '18:11', isha: '19:33' },
-  { fajr: '05:40', sunrise: '07:02', dhuhr: '12:38', asr: '15:56', maghrib: '18:12', isha: '19:34' },
-  { fajr: '05:38', sunrise: '07:00', dhuhr: '12:37', asr: '15:57', maghrib: '18:14', isha: '19:36' },
-  { fajr: '05:36', sunrise: '06:58', dhuhr: '12:37', asr: '15:58', maghrib: '18:15', isha: '19:37' },
-  { fajr: '05:34', sunrise: '06:56', dhuhr: '12:37', asr: '15:59', maghrib: '18:17', isha: '19:39' },
-  { fajr: '05:32', sunrise: '06:54', dhuhr: '12:37', asr: '16:00', maghrib: '18:18', isha: '19:40' },
-  { fajr: '05:30', sunrise: '06:52', dhuhr: '12:37', asr: '16:01', maghrib: '18:20', isha: '19:42' },
-  { fajr: '05:28', sunrise: '06:50', dhuhr: '12:36', asr: '16:02', maghrib: '18:21', isha: '19:43' },
-  { fajr: '05:26', sunrise: '06:48', dhuhr: '12:36', asr: '16:03', maghrib: '18:23', isha: '19:45' },
-  { fajr: '05:24', sunrise: '06:46', dhuhr: '12:36', asr: '16:04', maghrib: '18:24', isha: '19:46' },
-  { fajr: '05:22', sunrise: '06:44', dhuhr: '12:36', asr: '16:05', maghrib: '18:26', isha: '19:48' },
-  { fajr: '05:20', sunrise: '06:42', dhuhr: '12:35', asr: '16:06', maghrib: '18:27', isha: '19:49' },
-  { fajr: '05:18', sunrise: '06:40', dhuhr: '12:35', asr: '16:07', maghrib: '18:29', isha: '19:51' },
-  { fajr: '05:16', sunrise: '06:38', dhuhr: '12:35', asr: '16:08', maghrib: '18:30', isha: '19:52' },
-  { fajr: '05:14', sunrise: '06:36', dhuhr: '12:34', asr: '16:09', maghrib: '18:32', isha: '19:54' },
-  { fajr: '05:12', sunrise: '06:34', dhuhr: '12:34', asr: '16:10', maghrib: '18:33', isha: '19:55' },
-  { fajr: '05:10', sunrise: '06:32', dhuhr: '12:34', asr: '16:11', maghrib: '18:35', isha: '19:57' },
-  { fajr: '05:08', sunrise: '06:30', dhuhr: '12:33', asr: '16:12', maghrib: '18:36', isha: '19:58' },
-  { fajr: '05:06', sunrise: '06:28', dhuhr: '12:33', asr: '16:13', maghrib: '18:38', isha: '20:00' },
-  { fajr: '05:04', sunrise: '06:26', dhuhr: '12:33', asr: '16:14', maghrib: '18:39', isha: '20:01' },
-  { fajr: '05:02', sunrise: '06:24', dhuhr: '12:32', asr: '16:15', maghrib: '18:41', isha: '20:03' },
-  { fajr: '05:00', sunrise: '06:22', dhuhr: '12:32', asr: '16:16', maghrib: '18:42', isha: '20:04' },
-  { fajr: '04:58', sunrise: '06:20', dhuhr: '12:32', asr: '16:17', maghrib: '18:44', isha: '20:06' },
-  { fajr: '04:56', sunrise: '06:18', dhuhr: '12:31', asr: '16:18', maghrib: '18:45', isha: '20:07' },
-  { fajr: '04:54', sunrise: '06:16', dhuhr: '12:31', asr: '16:19', maghrib: '18:47', isha: '20:09' },
-  { fajr: '04:52', sunrise: '06:14', dhuhr: '12:30', asr: '16:20', maghrib: '18:48', isha: '20:10' },
-  { fajr: '04:50', sunrise: '06:12', dhuhr: '12:30', asr: '16:21', maghrib: '18:50', isha: '20:12' },
+  { fajr: '05:59', sunrise: '07:23', dhuhr: '13:00', asr: '15:56', maghrib: '18:26', isha: '19:45' },
+  { fajr: '05:58', sunrise: '07:22', dhuhr: '12:59', asr: '15:57', maghrib: '18:27', isha: '19:46' },
+  { fajr: '05:57', sunrise: '07:21', dhuhr: '12:59', asr: '15:58', maghrib: '18:29', isha: '19:47' },
+  { fajr: '05:56', sunrise: '07:19', dhuhr: '12:59', asr: '15:58', maghrib: '18:30', isha: '19:48' },
+  { fajr: '05:54', sunrise: '07:18', dhuhr: '12:59', asr: '15:59', maghrib: '18:31', isha: '19:49' },
+  { fajr: '05:53', sunrise: '07:17', dhuhr: '12:59', asr: '16:00', maghrib: '18:32', isha: '19:51' },
+  { fajr: '05:52', sunrise: '07:15', dhuhr: '12:59', asr: '16:01', maghrib: '18:33', isha: '19:52' },
+  { fajr: '05:50', sunrise: '07:14', dhuhr: '12:59', asr: '16:02', maghrib: '18:34', isha: '19:53' },
+  { fajr: '05:49', sunrise: '07:12', dhuhr: '12:58', asr: '16:02', maghrib: '18:35', isha: '19:54' },
+  { fajr: '05:47', sunrise: '07:11', dhuhr: '12:58', asr: '16:03', maghrib: '18:37', isha: '19:55' },
+  { fajr: '05:46', sunrise: '07:09', dhuhr: '12:58', asr: '16:04', maghrib: '18:38', isha: '19:56' },
+  { fajr: '05:44', sunrise: '07:08', dhuhr: '12:58', asr: '16:05', maghrib: '18:39', isha: '19:57' },
+  { fajr: '05:43', sunrise: '07:06', dhuhr: '12:58', asr: '16:05', maghrib: '18:40', isha: '19:58' },
+  { fajr: '05:41', sunrise: '07:05', dhuhr: '12:58', asr: '16:06', maghrib: '18:41', isha: '19:59' },
+  { fajr: '05:40', sunrise: '07:03', dhuhr: '12:57', asr: '16:07', maghrib: '18:42', isha: '20:00' },
+  { fajr: '05:38', sunrise: '07:02', dhuhr: '12:57', asr: '16:08', maghrib: '18:43', isha: '20:01' },
+  { fajr: '05:37', sunrise: '07:00', dhuhr: '12:57', asr: '16:08', maghrib: '18:44', isha: '20:03' },
+  { fajr: '05:35', sunrise: '06:58', dhuhr: '12:57', asr: '16:09', maghrib: '18:46', isha: '20:04' },
+  { fajr: '05:34', sunrise: '06:57', dhuhr: '12:56', asr: '16:10', maghrib: '18:47', isha: '20:05' },
+  { fajr: '05:32', sunrise: '06:55', dhuhr: '12:56', asr: '16:10', maghrib: '18:48', isha: '20:06' },
+  { fajr: '05:30', sunrise: '06:54', dhuhr: '12:56', asr: '16:11', maghrib: '18:49', isha: '20:07' },
+  { fajr: '05:29', sunrise: '06:52', dhuhr: '12:56', asr: '16:12', maghrib: '18:50', isha: '20:08' },
+  { fajr: '05:27', sunrise: '06:51', dhuhr: '12:55', asr: '16:12', maghrib: '18:51', isha: '20:09' },
+  { fajr: '05:25', sunrise: '06:49', dhuhr: '12:55', asr: '16:13', maghrib: '18:52', isha: '20:10' },
+  { fajr: '05:24', sunrise: '06:47', dhuhr: '12:55', asr: '16:13', maghrib: '18:53', isha: '20:11' },
+  { fajr: '05:22', sunrise: '06:46', dhuhr: '12:55', asr: '16:14', maghrib: '18:54', isha: '20:13' },
+  { fajr: '05:20', sunrise: '06:44', dhuhr: '12:54', asr: '16:15', maghrib: '18:55', isha: '20:14' },
+  { fajr: '05:19', sunrise: '06:42', dhuhr: '12:54', asr: '16:15', maghrib: '18:56', isha: '20:15' },
+  { fajr: '05:17', sunrise: '06:41', dhuhr: '12:54', asr: '16:16', maghrib: '18:57', isha: '20:16' },
+  { fajr: '05:15', sunrise: '06:39', dhuhr: '12:53', asr: '16:16', maghrib: '18:58', isha: '20:17' },
 ];
 
 const DHIKR_LIST = [
@@ -54,7 +56,7 @@ const DHIKR_LIST = [
 function getRamadanDay(): number {
   const now = new Date();
   if (now < RAMADAN_START) return 0;
-  if (now > RAMADAN_END) return 30;
+  if (now >= RAMADAN_END) return 31;
   const diff = now.getTime() - RAMADAN_START.getTime();
   return Math.min(Math.floor(diff / (1000 * 60 * 60 * 24)) + 1, 30);
 }
