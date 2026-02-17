@@ -469,7 +469,7 @@ export default function RamadanApp() {
               <h1 style={{ fontFamily: "'Amiri', serif", fontSize: '2.8rem', fontWeight: 700, lineHeight: 1.1, marginBottom: 8 }}>
                 <span className="neon-text">{t.heroTitle}</span>
               </h1>
-              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem', maxWidth: 400, margin: '0 auto', lineHeight: 1.6 }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 400, margin: '0 auto', lineHeight: 1.6 }}>
                 {t.heroSubtitle}
               </p>
             </section>
@@ -478,11 +478,11 @@ export default function RamadanApp() {
             <section className="glass-card fade-in-up fade-in-up-delay-1" style={{ padding: 20, marginBottom: 20 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{t.today}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>{t.today}</div>
                   <div style={{ fontSize: '1rem', fontWeight: 600 }}>{formatDate(lang)}</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{t.hijriDate}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>{t.hijriDate}</div>
                   <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--primary)' }}>{getHijriDate()}</div>
                 </div>
               </div>
@@ -515,7 +515,7 @@ export default function RamadanApp() {
               <section className="glass-card fade-in-up fade-in-up-delay-2" style={{ padding: 24, marginBottom: 20, textAlign: 'center' }}>
                 <div style={{ fontSize: '2rem', marginBottom: 8 }}>🌙</div>
                 <h2 className="neon-text" style={{ fontSize: '1.5rem', fontFamily: "'Amiri', serif" }}>{t.ramadanMubarak}</h2>
-                <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginTop: 8 }}>{t.ramadanStarted}</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: 8 }}>{t.ramadanStarted}</p>
               </section>
             )}
 
@@ -523,30 +523,30 @@ export default function RamadanApp() {
             <section className="fade-in-up fade-in-up-delay-3" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
               <div className="glass-card" style={{ padding: 20, textAlign: 'center' }}>
                 <div style={{ fontSize: '1.5rem', marginBottom: 8 }}>🌅</div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{t.sahurTime}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>{t.sahurTime}</div>
                 <div className="neon-text" style={{ fontSize: '1.4rem', fontWeight: 700 }}>{prayerTimes.fajr}</div>
               </div>
               <div className="glass-card" style={{ padding: 20, textAlign: 'center' }}>
                 <div style={{ fontSize: '1.5rem', marginBottom: 8 }}>🌇</div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{t.iftarTime}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>{t.iftarTime}</div>
                 <div className="neon-text-teal" style={{ fontSize: '1.4rem', fontWeight: 700 }}>{prayerTimes.maghrib}</div>
               </div>
             </section>
 
             {/* Daily Progress Summary */}
             <section className="glass-card fade-in-up fade-in-up-delay-4" style={{ padding: 24, marginBottom: 20 }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 16, color: 'rgba(255,255,255,0.7)' }}>{t.todayProgress}</h3>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 16, color: 'var(--text-secondary)' }}>{t.todayProgress}</h3>
               <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                 <ProgressRing progress={habitsProgress} size={90} color="#00d4aa">
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#00d4aa' }}>{habitsCompleted}</div>
-                    <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)' }}>/{habitsTotal}</div>
+                    <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>/{habitsTotal}</div>
                   </div>
                 </ProgressRing>
                 <ProgressRing progress={fastingProgress} size={90} color="#c9a84c">
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#c9a84c' }}>{fastedCount}</div>
-                    <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)' }}>/{TOTAL_DAYS}</div>
+                    <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>/{TOTAL_DAYS}</div>
                   </div>
                 </ProgressRing>
                 <div style={{ textAlign: 'center' }}>
@@ -554,7 +554,7 @@ export default function RamadanApp() {
                     <span>🔥</span>
                     <span>{streak}</span>
                   </div>
-                  <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', marginTop: 6 }}>{t.streak}</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 6 }}>{t.streak}</div>
                 </div>
               </div>
             </section>
@@ -587,8 +587,8 @@ export default function RamadanApp() {
                     onClick={() => setActiveTab(f.tab)}
                   >
                     <div style={{ fontSize: '1.8rem', marginBottom: 8 }}>{f.icon}</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: 4, color: 'rgba(255,255,255,0.9)' }}>{f.title}</div>
-                    <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{f.desc}</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: 4, color: 'var(--foreground)' }}>{f.title}</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>{f.desc}</div>
                   </div>
                 ))}
                 {/* Calendar page link card */}
@@ -598,7 +598,7 @@ export default function RamadanApp() {
                     <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--primary)' }}>
                       {lang === 'az' ? '30 Günlük Namaz Təqvimi' : lang === 'ru' ? '30-дневный календарь намаза' : '30-Day Prayer Calendar'}
                     </span>
-                    <span style={{ marginLeft: 8, fontSize: '0.8rem', color: 'rgba(255,255,255,0.3)' }}>→</span>
+                    <span style={{ marginLeft: 8, fontSize: '0.8rem', color: 'var(--text-faint)' }}>→</span>
                   </div>
                 </Link>
               </div>
@@ -609,14 +609,14 @@ export default function RamadanApp() {
               <h3 className="neon-text" style={{ fontSize: '1.1rem', fontFamily: "'Amiri', serif", marginBottom: 6, textAlign: 'center' }}>
                 {t.stayConnected}
               </h3>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', textAlign: 'center', marginBottom: 16 }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', textAlign: 'center', marginBottom: 16 }}>
                 {t.subscribeDesc}
               </p>
               {emailSent ? (
                 <div style={{ textAlign: 'center', padding: '16px 0' }}>
                   <div style={{ fontSize: '2rem', marginBottom: 8 }}>✅</div>
                   <div style={{ color: 'var(--success)', fontWeight: 600, marginBottom: 6 }}>{t.subscribeSuccess}</div>
-                  <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem' }}>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                     {lang === 'az' ? '📧 Təsdiq mesajı email adresinizə göndərildi' : lang === 'ru' ? '📧 Письмо с подтверждением отправлено на ваш email' : '📧 A confirmation email has been sent to your inbox'}
                   </div>
                 </div>
@@ -638,8 +638,8 @@ export default function RamadanApp() {
             </section>
 
             {/* footer */}
-            <footer style={{ textAlign: 'center', padding: '20px 0 10px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-              <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.3)' }}>{t.footer}</p>
+            <footer style={{ textAlign: 'center', padding: '20px 0 10px', borderTop: '1px solid var(--glass-border)' }}>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-faint)' }}>{t.footer}</p>
               <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.15)', marginTop: 4 }}>{t.madeWith} ❤️</p>
             </footer>
           </div>
@@ -657,21 +657,21 @@ export default function RamadanApp() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
               <div className="glass-card" style={{ padding: 20, textAlign: 'center' }}>
                 <div style={{ fontSize: '1.5rem', marginBottom: 8 }}>🌅</div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{t.sahurTime}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>{t.sahurTime}</div>
                 <div className="neon-text" style={{ fontSize: '1.6rem', fontWeight: 700 }}>{prayerTimes.fajr}</div>
-                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginTop: 8 }}>{t.sahurCountdown}</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-faint)', marginTop: 8 }}>{t.sahurCountdown}</div>
               </div>
               <div className="glass-card" style={{ padding: 20, textAlign: 'center' }}>
                 <div style={{ fontSize: '1.5rem', marginBottom: 8 }}>🌇</div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{t.iftarTime}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>{t.iftarTime}</div>
                 <div className="neon-text-teal" style={{ fontSize: '1.6rem', fontWeight: 700 }}>{prayerTimes.maghrib}</div>
-                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginTop: 8 }}>{t.iftarCountdown}</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-faint)', marginTop: 8 }}>{t.iftarCountdown}</div>
               </div>
             </div>
 
             {/* Time to next prayer */}
             <div className="glass-card" style={{ padding: 16, marginBottom: 24, textAlign: 'center' }}>
-              <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>{t.timeRemaining}: </span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t.timeRemaining}: </span>
               <span className="neon-text-purple" style={{ fontWeight: 700, fontSize: '1.1rem' }}>{getTimeToNextPrayer(prayerTimes)}</span>
             </div>
 
@@ -749,7 +749,7 @@ export default function RamadanApp() {
                   onClick={() => { setSelectedDhikr(dhikr); setTasbihCount(0); }}
                 >
                   <div style={{ fontSize: '1.1rem', fontFamily: "'Amiri', serif", marginBottom: 2 }}>{dhikr.arabic}</div>
-                  <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>{t[dhikr.id as keyof typeof t]}</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{t[dhikr.id as keyof typeof t]}</div>
                 </div>
               ))}
             </div>
@@ -760,7 +760,7 @@ export default function RamadanApp() {
               <div style={{ fontSize: '1.8rem', fontFamily: "'Amiri', serif", color: 'var(--primary)', marginBottom: 6 }}>
                 {selectedDhikr.arabic}
               </div>
-              <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: 24 }}>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: 24 }}>
                 {t[selectedDhikr.id as keyof typeof t]}
               </div>
 
@@ -772,7 +772,7 @@ export default function RamadanApp() {
                 <div className="tasbih-button" onClick={handleTasbihClick}>
                   <div style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
                     <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>{tasbihCount}</div>
-                    <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>/ {selectedDhikr.target}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-faint)', marginTop: 4 }}>/ {selectedDhikr.target}</div>
                   </div>
                 </div>
               </div>
@@ -806,7 +806,7 @@ export default function RamadanApp() {
 
             {/* Daily Total */}
             <div className="glass-card" style={{ padding: 20, textAlign: 'center', marginBottom: 20 }}>
-              <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', marginBottom: 8 }}>{t.dailyTotal}</div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 8 }}>{t.dailyTotal}</div>
               <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>
                 <span className="neon-text">{dailyTasbihTotal}</span>
               </div>
@@ -827,10 +827,10 @@ export default function RamadanApp() {
               <ProgressRing progress={habitsProgress} size={120} strokeWidth={8} color="#00d4aa">
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#00d4aa' }}>{habitsCompleted}</div>
-                  <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>/ {habitsTotal}</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>/ {habitsTotal}</div>
                 </div>
               </ProgressRing>
-              <div style={{ marginTop: 12, fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>
+              <div style={{ marginTop: 12, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                 {t.todayProgress}
               </div>
               {habitsCompleted === habitsTotal && (
@@ -895,16 +895,16 @@ export default function RamadanApp() {
                 <ProgressRing progress={fastingProgress} size={100} strokeWidth={8} color="#c9a84c">
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#c9a84c' }}>{fastedCount}</div>
-                    <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)' }}>/{TOTAL_DAYS}</div>
+                    <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>/{TOTAL_DAYS}</div>
                   </div>
                 </ProgressRing>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   <div>
-                    <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>{t.totalFasted}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{t.totalFasted}</div>
                     <div style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--success)' }}>{fastedCount}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>{t.totalMissed}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{t.totalMissed}</div>
                     <div style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--danger)' }}>{missedCount}</div>
                   </div>
                   <div className="streak-badge active">
@@ -917,7 +917,7 @@ export default function RamadanApp() {
               {/* Progress Bar */}
               <div style={{ marginBottom: 8 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{t.progress}</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{t.progress}</span>
                   <span style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600 }}>{Math.round(fastingProgress)}%</span>
                 </div>
                 <div style={{ height: 8, borderRadius: 4, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
@@ -933,7 +933,7 @@ export default function RamadanApp() {
 
             {/* 30 Day Calendar Grid */}
             <div className="glass-card" style={{ padding: 18, marginBottom: 24 }}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: 14, color: 'rgba(255,255,255,0.7)' }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: 14, color: 'var(--text-secondary)' }}>
                 🗓 {t.dayChallenge}
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 8, justifyItems: 'center' }}>
@@ -953,7 +953,7 @@ export default function RamadanApp() {
                   );
                 })}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 14, fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 14, fontSize: '0.7rem', color: 'var(--text-muted)' }}>
                 <span>✓ {t.fasted}</span>
                 <span>✗ {t.missed}</span>
                 <span>○ —</span>
@@ -978,8 +978,8 @@ export default function RamadanApp() {
                         {day}
                       </div>
                       <div>
-                        <div style={{ fontSize: '0.85rem', fontWeight: 500, color: 'rgba(255,255,255,0.8)' }}>{t.day} {day}</div>
-                        <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)' }}>
+                        <div style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--foreground)' }}>{t.day} {day}</div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text-faint)' }}>
                           {t.sahurTime}: {pt.fajr} | {t.iftarTime}: {pt.maghrib}
                         </div>
                       </div>

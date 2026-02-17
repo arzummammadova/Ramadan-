@@ -23,6 +23,9 @@
   --warning: #ffa500;
   --danger: #ff4757;
   --streak-flame: #ff6b35;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  --text-faint: rgba(255, 255, 255, 0.15);
 }
 
 /* Light Mode Override */
@@ -46,6 +49,9 @@
   --warning: #e67e22;
   --danger: #e74c3c;
   --streak-flame: #e55039;
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --text-muted: rgba(0, 0, 0, 0.5);
+  --text-faint: rgba(0, 0, 0, 0.15);
 }
 
 /* Light Mode Element Styles */

@@ -204,7 +204,7 @@ export default function CalendarPage() {
                 <section className="fade-in-up" style={{ textAlign: 'center', marginBottom: 24 }}>
                     <h1 className="section-title" style={{ fontSize: '1.8rem' }}>🗓 {ct.title}</h1>
                     <p className="section-subtitle" style={{ marginBottom: 4 }}>{ct.subtitle}</p>
-                    <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>📍 {CITIES[city].name[lang]}, Azerbaijan • {ct.method}</p>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-faint)' }}>📍 {CITIES[city].name[lang]}, Azerbaijan • {ct.method}</p>
                 </section>
 
                 {/* Eid notice */}
@@ -221,7 +221,7 @@ export default function CalendarPage() {
                             </h2>
                             <button className="btn-glass" onClick={() => setSelectedDay(null)} style={{ padding: '6px 14px', fontSize: '0.8rem' }}>✕</button>
                         </div>
-                        <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginBottom: 16 }}>{detail.date} 2026</div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 16 }}>{detail.date} 2026</div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 10 }}>
                             {[
@@ -233,9 +233,9 @@ export default function CalendarPage() {
                                 { label: ct.maghribLabel, time: detail.maghrib, icon: '🌇', color: '#00d4aa' },
                                 { label: ct.ishaLabel, time: detail.isha, icon: '🌃', color: '#3498db' },
                             ].map(p => (
-                                <div key={p.label} style={{ padding: 14, borderRadius: 12, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
+                                <div key={p.label} style={{ padding: 14, borderRadius: 12, background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', textAlign: 'center' }}>
                                     <div style={{ fontSize: '1.2rem', marginBottom: 4 }}>{p.icon}</div>
-                                    <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: 2 }}>{p.label}</div>
+                                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: 2 }}>{p.label}</div>
                                     <div style={{ fontSize: '1.1rem', fontWeight: 700, color: p.color }}>{p.time}</div>
                                 </div>
                             ))}
@@ -243,15 +243,15 @@ export default function CalendarPage() {
 
                         <div style={{ marginTop: 16, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
                             <div style={{ padding: '10px 18px', borderRadius: 10, background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.15)' }}>
-                                <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{ct.sahurLabel}: </span>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{ct.sahurLabel}: </span>
                                 <span style={{ fontWeight: 700, color: 'var(--primary)' }}>{detail.imsak}</span>
                             </div>
                             <div style={{ padding: '10px 18px', borderRadius: 10, background: 'rgba(0,212,170,0.08)', border: '1px solid rgba(0,212,170,0.15)' }}>
-                                <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{ct.iftarLabel}: </span>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{ct.iftarLabel}: </span>
                                 <span style={{ fontWeight: 700, color: 'var(--success)' }}>{detail.maghrib}</span>
                             </div>
                             <div style={{ padding: '10px 18px', borderRadius: 10, background: 'rgba(155,89,182,0.08)', border: '1px solid rgba(155,89,182,0.15)' }}>
-                                <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{ct.fastingDuration}: </span>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{ct.fastingDuration}: </span>
                                 <span style={{ fontWeight: 700, color: '#9b59b6' }}>{getFastingDuration(detail.fajr, detail.maghrib)}</span>
                             </div>
                         </div>
@@ -295,18 +295,18 @@ export default function CalendarPage() {
                                             onMouseEnter={e => { if (!isToday && !isSelected) (e.currentTarget.style.background = 'rgba(255,255,255,0.03)'); }}
                                             onMouseLeave={e => { if (!isToday && !isSelected) (e.currentTarget.style.background = isQadr ? 'rgba(255,215,0,0.04)' : 'transparent'); }}
                                         >
-                                            <td style={{ padding: '12px 10px', textAlign: 'center', fontWeight: 700, color: isToday ? 'var(--success)' : isQadr ? 'var(--neon-gold)' : 'rgba(255,255,255,0.7)', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                                            <td style={{ padding: '12px 10px', textAlign: 'center', fontWeight: 700, color: isToday ? 'var(--success)' : isQadr ? 'var(--neon-gold)' : 'var(--text-secondary)', borderBottom: '1px solid var(--glass-border)' }}>
                                                 {row.day} {isQadr ? '✨' : ''}
                                             </td>
-                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', whiteSpace: 'nowrap', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>{row.date}</td>
-                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: '#9b59b6', fontWeight: 600, fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>{row.imsak}</td>
-                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: 'var(--primary)', fontWeight: 600, fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>{row.fajr}</td>
-                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: '#e67e22', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>{row.sunrise}</td>
-                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: '#f1c40f', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>{row.dhuhr}</td>
-                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: '#e74c3c', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>{row.asr}</td>
-                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: 'var(--success)', fontWeight: 600, fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>{row.maghrib}</td>
-                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: '#3498db', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>{row.isha}</td>
-                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>{getFastingDuration(row.fajr, row.maghrib)}</td>
+                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.75rem', whiteSpace: 'nowrap', borderBottom: '1px solid var(--glass-border)' }}>{row.date}</td>
+                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: '#9b59b6', fontWeight: 600, fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid var(--glass-border)' }}>{row.imsak}</td>
+                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: 'var(--primary)', fontWeight: 600, fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid var(--glass-border)' }}>{row.fajr}</td>
+                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: '#e67e22', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid var(--glass-border)' }}>{row.sunrise}</td>
+                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: '#f1c40f', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid var(--glass-border)' }}>{row.dhuhr}</td>
+                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: '#e74c3c', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid var(--glass-border)' }}>{row.asr}</td>
+                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: 'var(--success)', fontWeight: 600, fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid var(--glass-border)' }}>{row.maghrib}</td>
+                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: '#3498db', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid var(--glass-border)' }}>{row.isha}</td>
+                                            <td style={{ padding: '12px 10px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.72rem', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid var(--glass-border)' }}>{getFastingDuration(row.fajr, row.maghrib)}</td>
                                         </tr>
                                     );
                                 })}
@@ -316,7 +316,7 @@ export default function CalendarPage() {
                 </div>
 
                 {/* Legend */}
-                <div style={{ marginTop: 16, display: 'flex', gap: 20, justifyContent: 'center', flexWrap: 'wrap', fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>
+                <div style={{ marginTop: 16, display: 'flex', gap: 20, justifyContent: 'center', flexWrap: 'wrap', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     <span>🟢 {lang === 'az' ? 'Bu gün' : lang === 'en' ? 'Today' : 'Сегодня'}</span>
                     <span>✨ {ct.lailatulQadr}</span>
                     <span style={{ color: '#9b59b6' }}>● {ct.imsakLabel}/{ct.sahurLabel}</span>
@@ -325,7 +325,7 @@ export default function CalendarPage() {
 
                 {/* Footer */}
                 <footer style={{ textAlign: 'center', padding: '30px 0 10px' }}>
-                    <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.2)' }}>{ct.method}</p>
+                    <p style={{ fontSize: '0.7rem', color: 'var(--text-faint)' }}>{ct.method}</p>
                 </footer>
             </main>
         </div>
