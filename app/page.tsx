@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { translations, dailyQuotes, Lang } from './translations';
+import { translations, dailyQuotes, Lang, CITIES, CityKey } from './translations';
 import Link from 'next/link';
 
 // ==================== CONSTANTS ====================
@@ -10,22 +10,8 @@ const RAMADAN_START = new Date('2026-02-18T00:00:00+04:00');
 const RAMADAN_END = new Date('2026-03-20T00:00:00+04:00');
 const TOTAL_DAYS = 30;
 
-// Azerbaijan cities with minute offsets from Baku (based on longitude difference)
-type CityKey = 'baku' | 'sumgait' | 'ganja' | 'lankaran' | 'sheki' | 'mingachevir' | 'shirvan' | 'nakhchivan' | 'quba' | 'shamakhi';
-type Theme = 'dark' | 'light';
 
-const CITIES: Record<CityKey, { name: Record<Lang, string>; offset: number }> = {
-  baku: { name: { az: 'Bakı', en: 'Baku', ru: 'Баку' }, offset: 0 },
-  sumgait: { name: { az: 'Sumqayıt', en: 'Sumgait', ru: 'Сумгаит' }, offset: 1 },
-  ganja: { name: { az: 'Gəncə', en: 'Ganja', ru: 'Гянджа' }, offset: 14 },
-  lankaran: { name: { az: 'Lənkəran', en: 'Lankaran', ru: 'Ленкорань' }, offset: 4 },
-  sheki: { name: { az: 'Şəki', en: 'Sheki', ru: 'Шеки' }, offset: 11 },
-  mingachevir: { name: { az: 'Mingəçevir', en: 'Mingachevir', ru: 'Мингечевир' }, offset: 11 },
-  shirvan: { name: { az: 'Şirvan', en: 'Shirvan', ru: 'Ширван' }, offset: 4 },
-  nakhchivan: { name: { az: 'Naxçıvan', en: 'Nakhchivan', ru: 'Нахчыван' }, offset: 18 },
-  quba: { name: { az: 'Quba', en: 'Quba', ru: 'Куба' }, offset: 5 },
-  shamakhi: { name: { az: 'Şamaxı', en: 'Shamakhi', ru: 'Шамахы' }, offset: 5 },
-};
+type Theme = 'dark' | 'light';
 
 // Helper: add minutes to HH:MM string
 function addMinutes(time: string, mins: number): string {
@@ -73,7 +59,7 @@ const DHIKR_LIST = [
   { id: 'alhamdulillah', arabic: 'ٱلْحَمْدُ لِلَّٰهِ', target: 33 },
   { id: 'allahuakbar', arabic: 'ٱللَّٰهُ أَكْبَرُ', target: 33 },
   { id: 'astaghfirullah', arabic: 'أَسْتَغْفِرُ ٱللَّٰهَ', target: 99 },
-  { id: 'laIlahaIllallah', arabic: 'لَا إِلَٰهَ إِلَّا ٱللَّٰهُ', target: 99},
+  { id: 'laIlahaIllallah', arabic: 'لَا إِلَٰهَ إِلَّا ٱللَّٰهُ', target: 99 },
 ];
 
 // ==================== HELPERS ====================
@@ -455,46 +441,16 @@ export default function RamadanApp() {
       <RetroGrid />
 
       {/* Top Header */}
-      <header className="top-header" style={{ flexDirection: 'column', gap: 12, padding: '16px 20px', height: 'auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: '1.6rem' }}>☪</span>
-            <div>
-              <span className="neon-text" style={{ fontFamily: "'Amiri', serif", fontSize: '1.3rem', fontWeight: 700 }}>{t.appTitle}</span>
-              {/* <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', marginLeft: 8 }}>{t.appSubtitle}</span> */}
-            </div>
-          </div>
-          <button
-            className="theme-toggle"
-            onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
-            title="Toggle Theme"
-          >
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
+      <header className="top-header" style={{ justifyContent: 'space-between', padding: '16px 20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: '1.6rem' }}>☪</span>
+          <span className="neon-text" style={{ fontFamily: "'Amiri', serif", fontSize: '1.3rem', fontWeight: 700 }}>{t.appTitle}</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontSize: '1.1rem' }}>📍</span>
-            <select
-              className="city-select"
-              value={city}
-              onChange={(e) => setCity(e.target.value as CityKey)}
-            >
-              {(Object.keys(CITIES) as CityKey[]).map((key) => (
-                <option key={key} value={key}>
-                  {CITIES[key].name[lang]}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="lang-switcher">
-            {(['az', 'en', 'ru'] as Lang[]).map(l => (
-              <button key={l} className={`lang-btn ${lang === l ? 'active' : ''}`} onClick={() => setLang(l)}>{l.toUpperCase()}</button>
-            ))}
-          </div>
-        </div>
+        <Link href="/settings" className="btn-glass" style={{ padding: '8px 12px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: 'inherit' }}>
+          <span>⚙️</span>
+          <span style={{ fontSize: '0.9rem' }}>{t.settings}</span>
+        </Link>
       </header>
 
       {/* Main Content */}

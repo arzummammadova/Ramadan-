@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { translations, Lang } from '../translations';
+import { translations, Lang, CITIES, CityKey } from '../translations';
 import Link from 'next/link';
 
 // Exact Ramadan 2026 prayer times for Baku (Sunni Calculation: 06:12->05:25, 18:25->18:57)
@@ -38,21 +38,7 @@ const RAMADAN_CALENDAR = [
     { day: 30, date: '19 Mar', greg: '19-03-2026', imsak: '05:15', fajr: '05:25', sunrise: '06:49', dhuhr: '12:54', asr: '16:16', maghrib: '18:57', isha: '20:17' },
 ];
 
-// Azerbaijan cities with minute offsets from Baku
-type CityKey = 'baku' | 'sumgait' | 'ganja' | 'lankaran' | 'sheki' | 'mingachevir' | 'shirvan' | 'nakhchivan' | 'quba' | 'shamakhi';
 
-const CITIES: Record<CityKey, { name: Record<Lang, string>; offset: number }> = {
-    baku: { name: { az: 'Bakı', en: 'Baku', ru: 'Баку' }, offset: 0 },
-    sumgait: { name: { az: 'Sumqayıt', en: 'Sumgait', ru: 'Сумгаит' }, offset: 1 },
-    ganja: { name: { az: 'Gəncə', en: 'Ganja', ru: 'Гянджа' }, offset: 14 },
-    lankaran: { name: { az: 'Lənkəran', en: 'Lankaran', ru: 'Ленкорань' }, offset: 4 },
-    sheki: { name: { az: 'Şəki', en: 'Sheki', ru: 'Шеки' }, offset: 11 },
-    mingachevir: { name: { az: 'Mingəçevir', en: 'Mingachevir', ru: 'Мингечевир' }, offset: 11 },
-    shirvan: { name: { az: 'Şirvan', en: 'Shirvan', ru: 'Ширван' }, offset: 4 },
-    nakhchivan: { name: { az: 'Naxçıvan', en: 'Nakhchivan', ru: 'Нахчыван' }, offset: 18 },
-    quba: { name: { az: 'Quba', en: 'Quba', ru: 'Куба' }, offset: 5 },
-    shamakhi: { name: { az: 'Şamaxı', en: 'Shamakhi', ru: 'Шамахы' }, offset: 5 },
-};
 
 function addMinutes(time: string, mins: number): string {
     const [h, m] = time.split(':').map(Number);
