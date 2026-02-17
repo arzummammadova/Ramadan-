@@ -229,7 +229,7 @@ function ProgressRing({ progress, size = 80, strokeWidth = 6, color = '#c9a84c',
 }
 
 // ==================== MAIN APP ====================
-type Tab = 'home' | 'prayer' | 'tasbih' | 'tracker' | 'fasting';
+type Tab = 'home' | 'prayer' | 'tasbih' | 'tracker' | 'fasting' | 'settings';
 
 export default function RamadanApp() {
   const [lang, setLang] = useState<Lang>('az');
@@ -237,6 +237,7 @@ export default function RamadanApp() {
   const [countdown, setCountdown] = useState(getCountdown());
   const [theme, setTheme] = useState<Theme>('dark');
   const [city, setCity] = useState<CityKey>('baku');
+  const [isLoaded, setIsLoaded] = useState(false);
   const t = translations[lang];
 
   // Fasting data
@@ -292,6 +293,7 @@ export default function RamadanApp() {
         }
       }
     } catch { /* ignore */ }
+    setIsLoaded(true);
   }, []);
 
   // Apply theme to html
@@ -305,6 +307,7 @@ export default function RamadanApp() {
 
   // Save ALL state to localStorage on every change
   useEffect(() => {
+    if (!isLoaded) return;
     try {
       localStorage.setItem('ramadan-app-data', JSON.stringify({
         fastingDays,
@@ -320,7 +323,7 @@ export default function RamadanApp() {
         lastDate: new Date().toDateString(),
       }));
     } catch { /* ignore */ }
-  }, [fastingDays, habits, tasbihCount, dailyTasbihTotal, selectedDhikr, lang, streak, activeTab, theme, city]);
+  }, [fastingDays, habits, tasbihCount, dailyTasbihTotal, selectedDhikr, lang, streak, activeTab, theme, city, isLoaded]);
 
   // Countdown timer
   useEffect(() => {
@@ -429,6 +432,7 @@ export default function RamadanApp() {
     { key: 'tasbih', icon: '📿', label: t.navTasbih },
     { key: 'tracker', icon: '📊', label: t.navTracker },
     { key: 'fasting', icon: '🌙', label: t.navFasting },
+    { key: 'settings', icon: '⚙️', label: t.settings },
   ];
 
   return (
@@ -1052,17 +1056,18 @@ export default function RamadanApp() {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="nav-bottom">
+      <nav className="bottom-nav">
         <div style={{ display: 'flex', justifyContent: 'space-around', maxWidth: 500, margin: '0 auto' }}>
           {navItems.map(item => (
-            <div
+            <button
               key={item.key}
               className={`nav-item ${activeTab === item.key ? 'active' : ''}`}
               onClick={() => setActiveTab(item.key)}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
             >
               <span style={{ fontSize: '1.3rem' }}>{item.icon}</span>
-              <span>{item.label}</span>
-            </div>
+              <span style={{ fontSize: '0.7rem' }}>{item.label}</span>
+            </button>
           ))}
         </div>
       </nav>
