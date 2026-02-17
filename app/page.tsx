@@ -555,6 +555,16 @@ export default function RamadanApp() {
                     <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{f.desc}</div>
                   </div>
                 ))}
+                {/* Calendar page link card */}
+                <Link href="/calendar" style={{ textDecoration: 'none', gridColumn: '1 / -1' }}>
+                  <div className="glass-card" style={{ padding: 18, cursor: 'pointer', textAlign: 'center', background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.15)' }}>
+                    <span style={{ fontSize: '1.4rem', marginRight: 8 }}>🗓</span>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--primary)' }}>
+                      {lang === 'az' ? '30 Günlük Namaz Təqvimi' : lang === 'ru' ? '30-дневный календарь намаза' : '30-Day Prayer Calendar'}
+                    </span>
+                    <span style={{ marginLeft: 8, fontSize: '0.8rem', color: 'rgba(255,255,255,0.3)' }}>→</span>
+                  </div>
+                </Link>
               </div>
             </section>
 
@@ -567,8 +577,12 @@ export default function RamadanApp() {
                 {t.subscribeDesc}
               </p>
               {emailSent ? (
-                <div style={{ textAlign: 'center', padding: '16px 0', color: 'var(--success)', fontWeight: 600 }}>
-                  {t.subscribeSuccess}
+                <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                  <div style={{ fontSize: '2rem', marginBottom: 8 }}>✅</div>
+                  <div style={{ color: 'var(--success)', fontWeight: 600, marginBottom: 6 }}>{t.subscribeSuccess}</div>
+                  <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem' }}>
+                    {lang === 'az' ? '📧 Təsdiq mesajı email adresinizə göndərildi' : lang === 'ru' ? '📧 Письмо с подтверждением отправлено на ваш email' : '📧 A confirmation email has been sent to your inbox'}
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleEmailSubmit} style={{ display: 'flex', gap: 10 }}>
@@ -671,6 +685,13 @@ export default function RamadanApp() {
             <div className="glass-card" style={{ padding: 20, marginBottom: 20 }}>
               <h3 style={{ fontSize: '0.85rem', color: 'var(--primary)', marginBottom: 10, fontWeight: 600 }}>✨ {t.dailyVerse}</h3>
               <p className="quote-text" style={{ fontSize: '1.05rem' }}>{todayQuote}</p>
+            </div>
+
+            {/* Calendar Page Link */}
+            <div style={{ textAlign: 'center', marginBottom: 20 }}>
+              <Link href="/calendar" className="btn-glass" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', fontSize: '0.9rem', textDecoration: 'none', color: 'var(--primary)', fontWeight: 600 }}>
+                🗓 {lang === 'az' ? '30 Günlük Namaz Təqvimi' : lang === 'ru' ? '30-дневный календарь намаза' : '30-Day Prayer Calendar'}
+              </Link>
             </div>
           </div>
         )}
