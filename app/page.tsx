@@ -58,8 +58,8 @@ const DHIKR_LIST = [
   { id: 'subhanallah', arabic: 'سُبْحَانَ ٱللَّٰهِ', target: 33 },
   { id: 'alhamdulillah', arabic: 'ٱلْحَمْدُ لِلَّٰهِ', target: 33 },
   { id: 'allahuakbar', arabic: 'ٱللَّٰهُ أَكْبَرُ', target: 33 },
-  { id: 'astaghfirullah', arabic: 'أَسْتَغْفِرُ ٱللَّٰهَ', target: 99 },
-  { id: 'laIlahaIllallah', arabic: 'لَا إِلَٰهَ إِلَّا ٱللَّٰهُ', target: 99 },
+  { id: 'astaghfirullah', arabic: 'أَسْتَغْفِرُ ٱللَّٰهَ', target:100 },
+  { id: 'laIlahaIllallah', arabic: 'لَا إِلَٰهَ إِلَّا ٱللَّٰهُ', target: 100 },
 ];
 
 // ==================== HELPERS ====================
