@@ -838,6 +838,34 @@ body {
   justify-content: space-between;
 }
 
+/* BOTTOM NAVIGATION */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 12px 0 20px;
+  background: rgba(10, 10, 18, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(201, 168, 76, 0.15);
+  display: flex;
+  justify-content: center;
+}
+
+.nav-item {
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+  flex: 1;
+  max-width: 80px;
+}
+
+.nav-item.active {
+  color: var(--primary);
+  transform: translateY(-2px);
+  text-shadow: 0 0 10px rgba(201, 168, 76, 0.3);
+}
+
 /* Tab system */
 .tab-bar {
   display: flex;
