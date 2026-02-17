@@ -373,7 +373,7 @@ export default function RamadanApp() {
     setEmailSending(true);
     try {
       // Send notification to app owner
-      await fetch('https://formsubmit.co/ajax/arzumammadova03@gmail.com', {
+      await fetch('https://formsubmit.co/ajax/arzuuimammadova@gmail.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
@@ -389,7 +389,7 @@ export default function RamadanApp() {
       });
       // Send confirmation to subscriber via formsubmit.co
       // formsubmit.co sends auto-reply when _autoresponse is set
-      await fetch('https://formsubmit.co/ajax/arzumammadova03@gmail.com', {
+      await fetch('https://formsubmit.co/ajax/arzuuimammadova@gmail.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
@@ -447,10 +447,12 @@ export default function RamadanApp() {
           <span className="neon-text" style={{ fontFamily: "'Amiri', serif", fontSize: '1.3rem', fontWeight: 700 }}>{t.appTitle}</span>
         </div>
 
-        <Link href="/settings" className="btn-glass" style={{ padding: '8px 12px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: 'inherit' }}>
-          <span>⚙️</span>
-          <span style={{ fontSize: '0.9rem' }}>{t.settings}</span>
-        </Link>
+        {/* Language Switcher */}
+        <div className="lang-switcher">
+          {(['az', 'en', 'ru'] as Lang[]).map(l => (
+            <button key={l} className={`lang-btn ${lang === l ? 'active' : ''}`} onClick={() => setLang(l)}>{l.toUpperCase()}</button>
+          ))}
+        </div>
       </header>
 
       {/* Main Content */}
@@ -986,6 +988,65 @@ export default function RamadanApp() {
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {/* ===== SETTINGS TAB ===== */}
+        {activeTab === 'settings' && (
+          <div style={{ padding: '0 20px', maxWidth: 600, margin: '0 auto', paddingTop: 20 }}>
+            {/* Theme Setting */}
+            <section className="glass-card fade-in-up" style={{ padding: 20, marginBottom: 16 }}>
+              <h3 style={{ fontSize: '0.9rem', color: 'var(--primary)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span>🎨</span> {t.themeLabel}
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <button
+                  className={`btn-glass ${theme === 'dark' ? 'active-setting' : ''}`}
+                  onClick={() => setTheme('dark')}
+                  style={{ padding: '12px', textAlign: 'center', background: theme === 'dark' ? 'var(--primary)' : 'rgba(255,255,255,0.05)', color: theme === 'dark' ? '#fff' : 'inherit', border: theme === 'dark' ? 'none' : '1px solid rgba(255,255,255,0.1)' }}
+                >
+                  🌙 {t.darkMode}
+                </button>
+                <button
+                  className={`btn-glass ${theme === 'light' ? 'active-setting' : ''}`}
+                  onClick={() => setTheme('light')}
+                  style={{ padding: '12px', textAlign: 'center', background: theme === 'light' ? 'var(--primary)' : 'rgba(255,255,255,0.05)', color: theme === 'light' ? '#fff' : 'inherit', border: theme === 'light' ? 'none' : '1px solid rgba(255,255,255,0.1)' }}
+                >
+                  ☀️ {t.lightMode}
+                </button>
+              </div>
+            </section>
+
+            {/* Location Setting */}
+            <section className="glass-card fade-in-up fade-in-up-delay-1" style={{ padding: 20, marginBottom: 16 }}>
+              <h3 style={{ fontSize: '0.9rem', color: 'var(--primary)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span>📍</span> {t.locationLabel}
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {(Object.keys(CITIES) as CityKey[]).map((key) => (
+                  <button
+                    key={key}
+                    onClick={() => setCity(key)}
+                    style={{
+                      padding: '12px 16px',
+                      borderRadius: 10,
+                      background: city === key ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.03)',
+                      border: city === key ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.05)',
+                      color: city === key ? 'var(--primary)' : 'inherit',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <span>{CITIES[key].name[lang]}</span>
+                    {city === key && <span>✓</span>}
+                  </button>
+                ))}
+              </div>
+            </section>
           </div>
         )}
       </main>
