@@ -1,8 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { translations, Lang, CITIES, CityKey } from '../translations';
 import Link from 'next/link';
+import * as htmlToImage from 'html-to-image';
+import download from 'downloadjs';
+import * as XLSX from 'xlsx';
 
 // Exact Ramadan 2026 prayer times for Baku (Sunni Calculation: 06:12->05:25, 18:25->18:57)
 const RAMADAN_CALENDAR = [
@@ -52,6 +55,7 @@ export default function CalendarPage() {
     const [lang, setLang] = useState<Lang>('az');
     const [city, setCity] = useState<CityKey>('baku');
     const [selectedDay, setSelectedDay] = useState<number | null>(null);
+    const tableRef = useRef<HTMLDivElement>(null);
 
     // Load lang/city/theme from localStorage
     useEffect(() => {
@@ -183,6 +187,35 @@ export default function CalendarPage() {
     const today = getRamadanDay();
     const detail = selectedDay !== null ? adjustedCalendar[selectedDay - 1] : null;
 
+    const handleDownloadImage = async () => {
+        if (tableRef.current) {
+            try {
+                const dataUrl = await htmlToImage.toPng(tableRef.current, { backgroundColor: '#0f172a' });
+                download(dataUrl, `Ramadan-Calendar-2026-${CITIES[city].name[lang]}.png`);
+            } catch (error) {
+                console.error('Error generating image:', error);
+            }
+        }
+    };
+
+    const handleDownloadExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(adjustedCalendar.map(d => ({
+            [ct.dayLabel]: d.day,
+            [ct.dateLabel]: d.date,
+            [ct.imsakLabel]: d.imsak,
+            [ct.fajrLabel]: d.fajr,
+            [ct.sunriseLabel]: d.sunrise,
+            [ct.dhuhrLabel]: d.dhuhr,
+            [ct.asrLabel]: d.asr,
+            [ct.maghribLabel]: d.maghrib,
+            [ct.ishaLabel]: d.isha,
+            [ct.fastingDuration]: getFastingDuration(d.fajr, d.maghrib)
+        })));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Ramadan 2026");
+        XLSX.writeFile(wb, `Ramadan-Calendar-2026-${CITIES[city].name[lang]}.xlsx`);
+    };
+
     return (
         <div style={{ minHeight: '100vh', position: 'relative' }}>
             <div className="bg-islamic-pattern" />
@@ -264,8 +297,18 @@ export default function CalendarPage() {
                     </div>
                 )}
 
+                {/* Custom Download Buttons */}
+                <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 20, flexWrap: 'wrap' }}>
+                    <button onClick={handleDownloadImage} className="btn-glass" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', fontSize: '0.9rem' }}>
+                        📸 {ct.downloadImage}
+                    </button>
+                    <button onClick={handleDownloadExcel} className="btn-glass" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', fontSize: '0.9rem' }}>
+                        📊 {ct.downloadExcel}
+                    </button>
+                </div>
+
                 {/* Calendar Table */}
-                <div className="glass-card fade-in-up fade-in-up-delay-2" style={{ padding: 0, overflow: 'hidden' }}>
+                <div ref={tableRef} className="glass-card fade-in-up fade-in-up-delay-2" style={{ padding: 20, overflow: 'hidden', background: '#0f172a' }}>
                     <div style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
                             <thead>

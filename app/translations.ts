@@ -30,6 +30,11 @@ export const translations: Record<Lang, Record<string, string>> = {
         appSubtitle: 'Mübarək',
         settings: 'Tənzimləmələr',
 
+        // Download
+        downloadCalendar: 'Təqvimi Yüklə',
+        downloadImage: 'Şəkil kimi yüklə',
+        downloadExcel: 'Excel kimi yüklə',
+
         // Settings
         settingsTitle: 'Tənzimləmələr',
         themeLabel: 'Görünüş',
@@ -146,6 +151,11 @@ export const translations: Record<Lang, Record<string, string>> = {
         appSubtitle: 'Mubarak',
         settings: 'Settings',
 
+        // Download
+        downloadCalendar: 'Download Calendar',
+        downloadImage: 'Download as Image',
+        downloadExcel: 'Download as Excel',
+
         // Settings
         settingsTitle: 'Settings',
         themeLabel: 'Appearance',
@@ -250,6 +260,11 @@ export const translations: Record<Lang, Record<string, string>> = {
         appTitle: 'Рамадан',
         appSubtitle: 'Мубарак',
         settings: 'Настройки',
+
+        // Download
+        downloadCalendar: 'Скачать календарь',
+        downloadImage: 'Скачать как изображение',
+        downloadExcel: 'Скачать как Excel',
 
         // Settings
         settingsTitle: 'Настройки',

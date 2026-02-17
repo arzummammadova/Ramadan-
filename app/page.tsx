@@ -256,6 +256,8 @@ export default function RamadanApp() {
 
   // Email
   const [email, setEmail] = useState('');
+  const [subscribedEmail, setSubscribedEmail] = useState('');
+  const [notifiedPrayers, setNotifiedPrayers] = useState<string[]>([]);
   const [emailSent, setEmailSent] = useState(false);
   const [emailSending, setEmailSending] = useState(false);
 
@@ -280,6 +282,11 @@ export default function RamadanApp() {
         }
         if (data.lang) setLang(data.lang);
         if (typeof data.streak === 'number') setStreak(data.streak);
+        if (data.subscribedEmail) {
+          setSubscribedEmail(data.subscribedEmail);
+          setEmailSent(true);
+        }
+        if (data.notifiedPrayers) setNotifiedPrayers(data.notifiedPrayers);
         if (data.activeTab) setActiveTab(data.activeTab);
         if (data.theme) setTheme(data.theme);
         if (data.city) setCity(data.city);
@@ -289,6 +296,7 @@ export default function RamadanApp() {
             setHabits({ prayer: false, quran: false, water: false, work: false, exercise: false });
             setTasbihCount(0);
             setDailyTasbihTotal(0);
+            setNotifiedPrayers([]);
           }
         }
       }
@@ -320,10 +328,12 @@ export default function RamadanApp() {
         activeTab,
         theme,
         city,
+        subscribedEmail,
+        notifiedPrayers,
         lastDate: new Date().toDateString(),
       }));
     } catch { /* ignore */ }
-  }, [fastingDays, habits, tasbihCount, dailyTasbihTotal, selectedDhikr, lang, streak, activeTab, theme, city, isLoaded]);
+  }, [fastingDays, habits, tasbihCount, dailyTasbihTotal, selectedDhikr, lang, streak, activeTab, theme, city, isLoaded, subscribedEmail, notifiedPrayers]);
 
   // Countdown timer
   useEffect(() => {
@@ -410,6 +420,7 @@ export default function RamadanApp() {
         }),
       });
       setEmailSent(true);
+      setSubscribedEmail(email);
       setEmail('');
       setTimeout(() => setEmailSent(false), 8000);
     } catch { /* ignore */ }
@@ -418,6 +429,33 @@ export default function RamadanApp() {
 
   const prayerTimes = getTodayPrayerTimes(CITIES[city].offset);
   const ramadanDay = getRamadanDay();
+
+  // Check for prayer times and send notification
+  useEffect(() => {
+    if (!subscribedEmail) return;
+
+    const now = new Date();
+    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const times: { key: string; time: string }[] = [
+      { key: 'Fajr', time: prayerTimes.fajr },
+      { key: 'Sunrise', time: prayerTimes.sunrise },
+      { key: 'Dhuhr', time: prayerTimes.dhuhr },
+      { key: 'Asr', time: prayerTimes.asr },
+      { key: 'Maghrib', time: prayerTimes.maghrib },
+      { key: 'Isha', time: prayerTimes.isha },
+    ];
+
+    const match = times.find(t => t.time === currentTime);
+    if (match && !notifiedPrayers.includes(match.key)) {
+      setNotifiedPrayers(prev => [...prev, match.key]);
+
+      const msg = lang === 'az' ? `Namaz vaxtıdır: ${match.key}` : `It's time for ${match.key}`;
+      // Send Alert (Mock Email)
+      alert(`📧 [EMAIL SENT TO: ${subscribedEmail}]\n\n🔔 ${msg}\n⏰ ${match.time}`);
+    }
+  }, [countdown, subscribedEmail, notifiedPrayers, prayerTimes, lang]);
+
   const todayQuote = dailyQuotes[lang][ramadanDay > 0 ? (ramadanDay - 1) % 30 : new Date().getDate() % 30];
   const fastedCount = Object.values(fastingDays).filter(v => v === 'fasted').length;
   const missedCount = Object.values(fastingDays).filter(v => v === 'missed').length;
