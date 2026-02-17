@@ -242,7 +242,7 @@ export default function RamadanApp() {
 
   const mainRef = useRef<HTMLDivElement>(null);
 
-  // Load from localStorage
+  // Load from localStorage — restore ALL state on refresh
   useEffect(() => {
     try {
       const saved = localStorage.getItem('ramadan-app-data');
@@ -250,18 +250,19 @@ export default function RamadanApp() {
         const data = JSON.parse(saved);
         if (data.fastingDays) setFastingDays(data.fastingDays);
         if (data.habits) setHabits(data.habits);
-        if (data.tasbihCount) setTasbihCount(data.tasbihCount);
-        if (data.dailyTasbihTotal) setDailyTasbihTotal(data.dailyTasbihTotal);
+        if (typeof data.tasbihCount === 'number') setTasbihCount(data.tasbihCount);
+        if (typeof data.dailyTasbihTotal === 'number') setDailyTasbihTotal(data.dailyTasbihTotal);
         if (data.selectedDhikrId) {
           const found = DHIKR_LIST.find(d => d.id === data.selectedDhikrId);
           if (found) setSelectedDhikr(found);
         }
         if (data.lang) setLang(data.lang);
-        if (data.streak) setStreak(data.streak);
+        if (typeof data.streak === 'number') setStreak(data.streak);
+        if (data.activeTab) setActiveTab(data.activeTab);
         if (data.lastDate) {
           const today = new Date().toDateString();
           if (data.lastDate !== today) {
-            // New day: reset habits, keep fasting
+            // New day: reset daily habits & tasbih, keep fasting data
             setHabits({ prayer: false, quran: false, water: false, work: false, exercise: false });
             setTasbihCount(0);
             setDailyTasbihTotal(0);
@@ -271,7 +272,7 @@ export default function RamadanApp() {
     } catch { /* ignore */ }
   }, []);
 
-  // Save to localStorage
+  // Save ALL state to localStorage on every change
   useEffect(() => {
     try {
       localStorage.setItem('ramadan-app-data', JSON.stringify({
@@ -282,10 +283,11 @@ export default function RamadanApp() {
         selectedDhikrId: selectedDhikr.id,
         lang,
         streak,
+        activeTab,
         lastDate: new Date().toDateString(),
       }));
     } catch { /* ignore */ }
-  }, [fastingDays, habits, tasbihCount, dailyTasbihTotal, selectedDhikr, lang, streak]);
+  }, [fastingDays, habits, tasbihCount, dailyTasbihTotal, selectedDhikr, lang, streak, activeTab]);
 
   // Countdown timer
   useEffect(() => {
@@ -337,21 +339,43 @@ export default function RamadanApp() {
     if (!email) return;
     setEmailSending(true);
     try {
-      // Using formsubmit.co for serverless email
-      const res = await fetch('https://formsubmit.co/ajax/arzumammadova03@gmail.com', {
+      // Send notification to app owner
+      await fetch('https://formsubmit.co/ajax/arzumammadova03@gmail.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           email,
-          subject: 'Ramadan App - New Subscriber',
-          message: `New subscriber: ${email}\nLanguage: ${lang}\nDate: ${new Date().toISOString()}`,
+          _subject: 'Ramadan App - Yeni Abunəçi / New Subscriber',
+          _replyto: email,
+          _template: 'table',
+          subscriber_email: email,
+          language: lang,
+          date: new Date().toISOString(),
+          message: `Yeni abunəçi: ${email}`,
         }),
       });
-      if (res.ok) {
-        setEmailSent(true);
-        setEmail('');
-        setTimeout(() => setEmailSent(false), 5000);
-      }
+      // Send confirmation to subscriber via formsubmit.co
+      // formsubmit.co sends auto-reply when _autoresponse is set
+      await fetch('https://formsubmit.co/ajax/arzumammadova03@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          email,
+          _subject: 'Ramadan Mubarak! ✨ Abunəliyiniz təsdiqləndi',
+          _replyto: email,
+          _autoresponse: lang === 'az'
+            ? `Salam! 🌙 Ramadan App-a abunə olduğunuz üçün təşəkkür edirik! Gündəlik Ramazan xatırlatmaları və motivasiya mesajları alacaqsınız. Ramazan Mübarək! ✨`
+            : lang === 'ru'
+            ? `Здравствуйте! 🌙 Спасибо за подписку на Ramadan App! Вы будете получать ежедневные напоминания и мотивационные сообщения. Рамадан Мубарак! ✨`
+            : `Hello! 🌙 Thank you for subscribing to Ramadan App! You will receive daily Ramadan reminders and motivational messages. Ramadan Mubarak! ✨`,
+          _template: 'table',
+          subscriber_email: email,
+          message: 'Subscription confirmation',
+        }),
+      });
+      setEmailSent(true);
+      setEmail('');
+      setTimeout(() => setEmailSent(false), 8000);
     } catch { /* ignore */ }
     setEmailSending(false);
   };
