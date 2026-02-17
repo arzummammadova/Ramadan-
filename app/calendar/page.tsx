@@ -38,17 +38,44 @@ const RAMADAN_CALENDAR = [
     { day: 30, date: '19 Mar', greg: '19-03-2026', imsak: '05:05', fajr: '05:15', sunrise: '06:39', dhuhr: '12:53', asr: '16:16', maghrib: '18:58', isha: '20:17' },
 ];
 
+// Azerbaijan cities with minute offsets from Baku
+type CityKey = 'baku' | 'sumgait' | 'ganja' | 'lankaran' | 'sheki' | 'mingachevir' | 'shirvan' | 'nakhchivan' | 'quba' | 'shamakhi';
+
+const CITIES: Record<CityKey, { name: Record<Lang, string>; offset: number }> = {
+    baku: { name: { az: 'Bakı', en: 'Baku', ru: 'Баку' }, offset: 0 },
+    sumgait: { name: { az: 'Sumqayıt', en: 'Sumgait', ru: 'Сумгаит' }, offset: 1 },
+    ganja: { name: { az: 'Gəncə', en: 'Ganja', ru: 'Гянджа' }, offset: 14 },
+    lankaran: { name: { az: 'Lənkəran', en: 'Lankaran', ru: 'Ленкорань' }, offset: 4 },
+    sheki: { name: { az: 'Şəki', en: 'Sheki', ru: 'Шеки' }, offset: 11 },
+    mingachevir: { name: { az: 'Mingəçevir', en: 'Mingachevir', ru: 'Мингечевир' }, offset: 11 },
+    shirvan: { name: { az: 'Şirvan', en: 'Shirvan', ru: 'Ширван' }, offset: 4 },
+    nakhchivan: { name: { az: 'Naxçıvan', en: 'Nakhchivan', ru: 'Нахчыван' }, offset: 18 },
+    quba: { name: { az: 'Quba', en: 'Quba', ru: 'Куба' }, offset: 5 },
+    shamakhi: { name: { az: 'Şamaxı', en: 'Shamakhi', ru: 'Шамахы' }, offset: 5 },
+};
+
+function addMinutes(time: string, mins: number): string {
+    const [h, m] = time.split(':').map(Number);
+    const total = h * 60 + m + mins;
+    const newH = Math.floor(total / 60) % 24;
+    const newM = total % 60;
+    return `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
+}
+
 export default function CalendarPage() {
     const [lang, setLang] = useState<Lang>('az');
+    const [city, setCity] = useState<CityKey>('baku');
     const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
-    // Load lang from localStorage
+    // Load lang/city/theme from localStorage
     useEffect(() => {
         try {
             const saved = localStorage.getItem('ramadan-app-data');
             if (saved) {
                 const data = JSON.parse(saved);
                 if (data.lang) setLang(data.lang);
+                if (data.city) setCity(data.city);
+                if (data.theme === 'light') document.body.classList.add('light-mode');
             }
         } catch { /* ignore */ }
     }, []);
@@ -131,6 +158,19 @@ export default function CalendarPage() {
     };
 
     const ct = calT[lang];
+    const offset = CITIES[city].offset;
+
+    // Apply offset to all times
+    const adjustedCalendar = RAMADAN_CALENDAR.map(d => ({
+        ...d,
+        imsak: addMinutes(d.imsak, offset),
+        fajr: addMinutes(d.fajr, offset),
+        sunrise: addMinutes(d.sunrise, offset),
+        dhuhr: addMinutes(d.dhuhr, offset),
+        asr: addMinutes(d.asr, offset),
+        maghrib: addMinutes(d.maghrib, offset),
+        isha: addMinutes(d.isha, offset),
+    }));
 
     // Calculate fasting duration
     const getFastingDuration = (fajr: string, maghrib: string) => {
@@ -155,7 +195,7 @@ export default function CalendarPage() {
     };
 
     const today = getRamadanDay();
-    const detail = selectedDay !== null ? RAMADAN_CALENDAR[selectedDay - 1] : null;
+    const detail = selectedDay !== null ? adjustedCalendar[selectedDay - 1] : null;
 
     return (
         <div style={{ minHeight: '100vh', position: 'relative' }}>
@@ -178,7 +218,7 @@ export default function CalendarPage() {
                 <section className="fade-in-up" style={{ textAlign: 'center', marginBottom: 24 }}>
                     <h1 className="section-title" style={{ fontSize: '1.8rem' }}>🗓 {ct.title}</h1>
                     <p className="section-subtitle" style={{ marginBottom: 4 }}>{ct.subtitle}</p>
-                    <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>{ct.location} • {ct.method}</p>
+                    <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>📍 {CITIES[city].name[lang]}, Azerbaijan • {ct.method}</p>
                 </section>
 
                 {/* Eid notice */}
@@ -252,7 +292,7 @@ export default function CalendarPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {RAMADAN_CALENDAR.map(row => {
+                                {adjustedCalendar.map(row => {
                                     const isToday = row.day === today;
                                     const isQadr = qadrNights.includes(row.day);
                                     const isSelected = row.day === selectedDay;

@@ -10,7 +10,31 @@ const RAMADAN_START = new Date('2026-02-18T00:00:00+04:00');
 const RAMADAN_END = new Date('2026-03-20T00:00:00+04:00');
 const TOTAL_DAYS = 30;
 
-// Baku prayer times — exact from Aladhan API (Diyanet method) for Ramadan 2026
+// Azerbaijan cities with minute offsets from Baku (based on longitude difference)
+type CityKey = 'baku' | 'sumgait' | 'ganja' | 'lankaran' | 'sheki' | 'mingachevir' | 'shirvan' | 'nakhchivan' | 'quba' | 'shamakhi';
+type Theme = 'dark' | 'light';
+
+const CITIES: Record<CityKey, { name: Record<Lang, string>; offset: number }> = {
+  baku: { name: { az: 'Bakı', en: 'Baku', ru: 'Баку' }, offset: 0 },
+  sumgait: { name: { az: 'Sumqayıt', en: 'Sumgait', ru: 'Сумгаит' }, offset: 1 },
+  ganja: { name: { az: 'Gəncə', en: 'Ganja', ru: 'Гянджа' }, offset: 14 },
+  lankaran: { name: { az: 'Lənkəran', en: 'Lankaran', ru: 'Ленкорань' }, offset: 4 },
+  sheki: { name: { az: 'Şəki', en: 'Sheki', ru: 'Шеки' }, offset: 11 },
+  mingachevir: { name: { az: 'Mingəçevir', en: 'Mingachevir', ru: 'Мингечевир' }, offset: 11 },
+  shirvan: { name: { az: 'Şirvan', en: 'Shirvan', ru: 'Ширван' }, offset: 4 },
+  nakhchivan: { name: { az: 'Naxçıvan', en: 'Nakhchivan', ru: 'Нахчыван' }, offset: 18 },
+  quba: { name: { az: 'Quba', en: 'Quba', ru: 'Куба' }, offset: 5 },
+  shamakhi: { name: { az: 'Şamaxı', en: 'Shamakhi', ru: 'Шамахы' }, offset: 5 },
+};
+
+// Helper: add minutes to HH:MM string
+function addMinutes(time: string, mins: number): string {
+  const [h, m] = time.split(':').map(Number);
+  const total = h * 60 + m + mins;
+  const newH = Math.floor(total / 60) % 24;
+  const newM = total % 60;
+  return `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
+}
 const PRAYER_TIMES_DATA = [
   { fajr: '05:59', sunrise: '07:23', dhuhr: '13:00', asr: '15:56', maghrib: '18:26', isha: '19:45' },
   { fajr: '05:58', sunrise: '07:22', dhuhr: '12:59', asr: '15:57', maghrib: '18:27', isha: '19:46' },
@@ -94,9 +118,18 @@ function getCountdown() {
   };
 }
 
-function getTodayPrayerTimes() {
+function getTodayPrayerTimes(cityOffset = 0) {
   const dayIdx = Math.max(0, getRamadanDay() - 1);
-  return PRAYER_TIMES_DATA[Math.min(dayIdx, 29)];
+  const base = PRAYER_TIMES_DATA[Math.min(dayIdx, 29)];
+  if (cityOffset === 0) return base;
+  return {
+    fajr: addMinutes(base.fajr, cityOffset),
+    sunrise: addMinutes(base.sunrise, cityOffset),
+    dhuhr: addMinutes(base.dhuhr, cityOffset),
+    asr: addMinutes(base.asr, cityOffset),
+    maghrib: addMinutes(base.maghrib, cityOffset),
+    isha: addMinutes(base.isha, cityOffset),
+  };
 }
 
 function getTimeToNextPrayer(prayerTimes: ReturnType<typeof getTodayPrayerTimes>): string {
@@ -216,6 +249,8 @@ export default function RamadanApp() {
   const [lang, setLang] = useState<Lang>('az');
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [countdown, setCountdown] = useState(getCountdown());
+  const [theme, setTheme] = useState<Theme>('dark');
+  const [city, setCity] = useState<CityKey>('baku');
   const t = translations[lang];
 
   // Fasting data
@@ -259,10 +294,11 @@ export default function RamadanApp() {
         if (data.lang) setLang(data.lang);
         if (typeof data.streak === 'number') setStreak(data.streak);
         if (data.activeTab) setActiveTab(data.activeTab);
+        if (data.theme) setTheme(data.theme);
+        if (data.city) setCity(data.city);
         if (data.lastDate) {
           const today = new Date().toDateString();
           if (data.lastDate !== today) {
-            // New day: reset daily habits & tasbih, keep fasting data
             setHabits({ prayer: false, quran: false, water: false, work: false, exercise: false });
             setTasbihCount(0);
             setDailyTasbihTotal(0);
@@ -271,6 +307,11 @@ export default function RamadanApp() {
       }
     } catch { /* ignore */ }
   }, []);
+
+  // Apply theme to body
+  useEffect(() => {
+    document.body.classList.toggle('light-mode', theme === 'light');
+  }, [theme]);
 
   // Save ALL state to localStorage on every change
   useEffect(() => {
@@ -284,10 +325,12 @@ export default function RamadanApp() {
         lang,
         streak,
         activeTab,
+        theme,
+        city,
         lastDate: new Date().toDateString(),
       }));
     } catch { /* ignore */ }
-  }, [fastingDays, habits, tasbihCount, dailyTasbihTotal, selectedDhikr, lang, streak, activeTab]);
+  }, [fastingDays, habits, tasbihCount, dailyTasbihTotal, selectedDhikr, lang, streak, activeTab, theme, city]);
 
   // Countdown timer
   useEffect(() => {
@@ -366,8 +409,8 @@ export default function RamadanApp() {
           _autoresponse: lang === 'az'
             ? `Salam! 🌙 Ramadan App-a abunə olduğunuz üçün təşəkkür edirik! Gündəlik Ramazan xatırlatmaları və motivasiya mesajları alacaqsınız. Ramazan Mübarək! ✨`
             : lang === 'ru'
-            ? `Здравствуйте! 🌙 Спасибо за подписку на Ramadan App! Вы будете получать ежедневные напоминания и мотивационные сообщения. Рамадан Мубарак! ✨`
-            : `Hello! 🌙 Thank you for subscribing to Ramadan App! You will receive daily Ramadan reminders and motivational messages. Ramadan Mubarak! ✨`,
+              ? `Здравствуйте! 🌙 Спасибо за подписку на Ramadan App! Вы будете получать ежедневные напоминания и мотивационные сообщения. Рамадан Мубарак! ✨`
+              : `Hello! 🌙 Thank you for subscribing to Ramadan App! You will receive daily Ramadan reminders and motivational messages. Ramadan Mubarak! ✨`,
           _template: 'table',
           subscriber_email: email,
           message: 'Subscription confirmation',
@@ -380,7 +423,7 @@ export default function RamadanApp() {
     setEmailSending(false);
   };
 
-  const prayerTimes = getTodayPrayerTimes();
+  const prayerTimes = getTodayPrayerTimes(CITIES[city].offset);
   const ramadanDay = getRamadanDay();
   const todayQuote = dailyQuotes[lang][ramadanDay > 0 ? (ramadanDay - 1) % 30 : new Date().getDate() % 30];
   const fastedCount = Object.values(fastingDays).filter(v => v === 'fasted').length;
@@ -408,18 +451,45 @@ export default function RamadanApp() {
       <RetroGrid />
 
       {/* Top Header */}
-      <header className="top-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: '1.5rem' }}>☪</span>
-          <div>
-            <span className="neon-text" style={{ fontFamily: "'Amiri', serif", fontSize: '1.2rem', fontWeight: 700 }}>{t.appTitle}</span>
-            <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', marginLeft: 6 }}>{t.appSubtitle}</span>
+      <header className="top-header" style={{ flexDirection: 'column', gap: 12, padding: '16px 20px', height: 'auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: '1.6rem' }}>☪</span>
+            <div>
+              <span className="neon-text" style={{ fontFamily: "'Amiri', serif", fontSize: '1.3rem', fontWeight: 700 }}>{t.appTitle}</span>
+              {/* <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', marginLeft: 8 }}>{t.appSubtitle}</span> */}
+            </div>
           </div>
+          <button
+            className="theme-toggle"
+            onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
+            title="Toggle Theme"
+          >
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
         </div>
-        <div className="lang-switcher">
-          {(['az', 'en', 'ru'] as Lang[]).map(l => (
-            <button key={l} className={`lang-btn ${lang === l ? 'active' : ''}`} onClick={() => setLang(l)}>{l}</button>
-          ))}
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: '1.1rem' }}>📍</span>
+            <select
+              className="city-select"
+              value={city}
+              onChange={(e) => setCity(e.target.value as CityKey)}
+            >
+              {(Object.keys(CITIES) as CityKey[]).map((key) => (
+                <option key={key} value={key}>
+                  {CITIES[key].name[lang]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="lang-switcher">
+            {(['az', 'en', 'ru'] as Lang[]).map(l => (
+              <button key={l} className={`lang-btn ${lang === l ? 'active' : ''}`} onClick={() => setLang(l)}>{l.toUpperCase()}</button>
+            ))}
+          </div>
         </div>
       </header>
 
